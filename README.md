@@ -39,3 +39,18 @@ You may write helper functions, but there should be one function that:
 
 2. When called, prints the grid of characters specified by the input data, displaying a graphic of correctly oriented uppercase letters.
 
+
+-----------------------------------------
+
+How to install curl lib for C++:
+
+Windows Powershell:
+
+git clone https://github.com/microsoft/vcpkg
+cd vcpkg
+.\bootstrap-vcpkg.bat
+.\vcpkg install curl:x64-windows
+.\vcpkg integrate install
+
+<Restartr Visual Studio>
+
