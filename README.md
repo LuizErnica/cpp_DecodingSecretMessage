@@ -47,10 +47,15 @@ How to install curl lib for C++:
 Windows Powershell:
 
 git clone https://github.com/microsoft/vcpkg
+
 cd vcpkg
+
 .\bootstrap-vcpkg.bat
+
 .\vcpkg install curl:x64-windows
+
 .\vcpkg integrate install
 
-<Restartr Visual Studio>
+
+Restart Visual Studio
 
