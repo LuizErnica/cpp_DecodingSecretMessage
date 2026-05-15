@@ -39,4 +39,3 @@ You may write helper functions, but there should be one function that:
 
 2. When called, prints the grid of characters specified by the input data, displaying a graphic of correctly oriented uppercase letters.
 
-3. 
