@@ -1,7 +1,6 @@
 #include <iostream>
 #include <string>
-#include <vector>
-#include <regex>
+#include <map>
 #include <curl/curl.h>
 
 using namespace std;
@@ -31,73 +30,88 @@ string downloadHTML(const string& url)
     return buffer;
 }
 
-string removeTags(const string& input)
+string getNextLetterValue(string &html)
 {
-    return regex_replace(input, regex("<[^>]*>"), "");
-}
+	string ret;
+	basic_string <char>::size_type index;
+	basic_string <char>::size_type index2;
 
+	index = html.find("<span class="); // This token is the beggining of the characteres coordinates lines in the HTML code
+	if (index == string::npos)
+		ret = "";
+
+	index = html.find(">", index); // This token is the beggining of the data value in the HTML code
+	if (index == string::npos)
+		ret = "";
+
+	index2 = html.find("</span>", index); // This token is the end of the HTML code for the data value in the HTML code
+	if (index2 == string::npos)
+		ret = "";
+
+	ret = html.substr(index + 1, index2 - index - 1);
+	html = html.substr(index2);
+
+	return ret;
+}
 int main()
 {
-    string url =
-        "https://docs.google.com/document/d/e/"
-        "2PACX-1vTMOmshQe8YvaRXi6gEPKKlsC6UpFJSMAk4mQjLm_u1gmHdVVTaeh7nBNFBRlui0sTZ-snGwZM4DBCT/pub";
+    string url, html;
+	map<int, map<int, string>> lettersMap; // This map will store the coordinates and the corresponding character, where the key of the outer map is the x coordinate and the key of the inner map is the y coordinate
+    int x, y;
+    string ret, letter;
 
-    string html = downloadHTML(url);
+	//cout << "Enter the URL: ";
+    //getline(cin, url);
 
-    regex tableRegex("<table[^>]*>(.*?)</table>",
-        regex_constants::icase |
-        regex_constants::dotall);
+	url = "https://docs.google.com/document/d/e/2PACX-1vTMOmshQe8YvaRXi6gEPKKlsC6UpFJSMAk4mQjLm_u1gmHdVVTaeh7nBNFBRlui0sTZ-snGwZM4DBCT/pub";
 
-    regex rowRegex("<tr[^>]*>(.*?)</tr>",
-        regex_constants::icase |
-        regex_constants::dotall);
+	html = downloadHTML(url);
 
-    regex cellRegex("<t[dh][^>]*>(.*?)</t[dh]>",
-        regex_constants::icase |
-        regex_constants::dotall);
+	// This token is the beggining of the characteres coordinates table in the HTML code
+	html = html.substr(html.find("y-coordinate"));
 
-    smatch tableMatch;
+	do
+	{
+		// Get X coordinate
+		if ((ret = getNextLetterValue(html)) == "")
+			break;
 
-    if (regex_search(html, tableMatch, tableRegex))
-    {
-        string tableHTML = tableMatch[1];
+		x = stoi(ret);
 
-        auto rowBegin =
-            sregex_iterator(tableHTML.begin(),
-                tableHTML.end(),
-                rowRegex);
+		// Get Letter
+		if ((letter = getNextLetterValue(html)) == "")
+			break;
 
-        auto rowEnd = sregex_iterator();
+		// Get Y coordinate
+		if ((ret = getNextLetterValue(html)) == "")
+			break;
 
-        for (auto rowIt = rowBegin; rowIt != rowEnd; ++rowIt)
-        {
-            string rowHTML = (*rowIt)[1];
+		y = stoi(ret);
 
-            auto cellBegin =
-                sregex_iterator(rowHTML.begin(),
-                    rowHTML.end(),
-                    cellRegex);
+		lettersMap[y][x] = letter; // Store the letter in the map with its coordinates as keys
 
-            auto cellEnd = sregex_iterator();
+	} while (!html.empty());
 
-            for (auto cellIt = cellBegin;
-                cellIt != cellEnd;
-                ++cellIt)
-            {
-                string cell = (*cellIt)[1];
+	for (int yid = lettersMap.size() - 1; yid >= 0 ; yid--)
+	{
+		for (int xid = 0 ; xid < lettersMap[yid].size() - 1; xid++)
+		{
+			letter = lettersMap[yid][xid];
 
-                cell = removeTags(cell);
+			if (letter == "")
+				cout << " ";
+			else
+				cout << letter;
+		}
 
-                cout << cell << " | ";
-            }
-
-            cout << endl;
-        }
-    }
-    else
-    {
-        cout << "Tabela nao encontrada." << endl;
-    }
+		cout << endl;
+	}
 
     return 0;
 }
+/* 
+
+issues:
+	01 - missing last letters in the map
+	02 - Need to print SPACE when there is less letters in the template because the map does not compute spaces.
+* */
