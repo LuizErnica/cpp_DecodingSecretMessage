@@ -4,8 +4,8 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # My own settings
-"Coding assessment input data example.html"
-"table.html"
+Coding assessment input data example.html
+table.html
 
 # User-specific files
 *.rsuser
