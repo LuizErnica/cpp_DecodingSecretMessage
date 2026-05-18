@@ -56,23 +56,13 @@ string static getNextLetterValue(string &html)
 	return ret;
 }
 
-// Main function to execute the program
-int main()
+// Function to print the letters in the correct order based on their coordinates extracted from the HTML code
+void static printLetters(string url)
 {
-    string url, html;
 	map<int, map<int, string>> lettersMap; // This map will store the coordinates and the corresponding character (Y, X, Letter)
-    int y, x;
-    string ret, letter;
-
-	cout << "Enter the URL: ";
-    getline(cin, url);
-
-	/* Example URLs to test:
-	url = "https://docs.google.com/document/d/e/2PACX-1vTMOmshQe8YvaRXi6gEPKKlsC6UpFJSMAk4mQjLm_u1gmHdVVTaeh7nBNFBRlui0sTZ-snGwZM4DBCT/pub";
-	url = "https://docs.google.com/document/d/e/2PACX-1vSvM5gDlNvt7npYHhp_XfsJvuntUhq184By5xO_pA4b_gCWeXb6dM6ZxwN8rE6S4ghUsCj2VKR21oEP/pub";
-	*/
-
-	html = getHTML(url);
+	int y, x;
+	string ret, letter;
+	string html = getHTML(url);
 
 	// This token is the beggining reference of the characteres coordinates table in the HTML code
 	html = html.substr(html.find("y-coordinate"));
@@ -101,9 +91,9 @@ int main()
 	} while (!html.empty());
 
 	// Print the letters in the correct order based on their coordinates
-	for (int yid = (int)lettersMap.size() - 1; yid >= 0 ; yid--)
+	for (int yid = (int)lettersMap.size() - 1; yid >= 0; yid--)
 	{
-		for (int xid = 0 ; xid <= lettersMap[yid].size() - 1; xid++)
+		for (int xid = 0; xid <= lettersMap[yid].size() - 1; xid++)
 		{
 			letter = lettersMap[yid][xid];
 
@@ -115,6 +105,41 @@ int main()
 
 		cout << endl;
 	}
+}
+
+// Main function to execute the program
+int main()
+{
+	string url;
+	/* Example URLs to test:
+	url = "https://docs.google.com/document/d/e/2PACX-1vTMOmshQe8YvaRXi6gEPKKlsC6UpFJSMAk4mQjLm_u1gmHdVVTaeh7nBNFBRlui0sTZ-snGwZM4DBCT/pub";
+	url = "https://docs.google.com/document/d/e/2PACX-1vSvM5gDlNvt7npYHhp_XfsJvuntUhq184By5xO_pA4b_gCWeXb6dM6ZxwN8rE6S4ghUsCj2VKR21oEP/pub";
+	*/
+
+	cout << "Enter the URL: ";
+	getline(cin, url);
+	printLetters(url);
 
     return 0;
 }
+/*
+*
+INPUT/ OUTPUT:
+
+Enter the URL: https://docs.google.com/document/d/e/2PACX-1vTMOmshQe8YvaRXi6gEPKKlsC6UpFJSMAk4mQjLm_u1gmHdVVTaeh7nBNFBRlui0sTZ-snGwZM4DBCT/pub
+
+█▀▀▀
+█▀▀
+█
+
+Enter the URL: https://docs.google.com/document/d/e/2PACX-1vSvM5gDlNvt7npYHhp_XfsJvuntUhq184By5xO_pA4b_gCWeXb6dM6ZxwN8rE6S4ghUsCj2VKR21oEP/pub
+
+██░     ██░    ███████░     ██░     ██░     ██████░ ████████░    ████████░     ████████░
+██░     ██░  ███░    ██░   ████░   ████░      ██░   ██░     ██░  ██░     ██░ ███░     ███░
+██░     ██░ ███░           ██░██░ ██░██░      ██░   ██░      ██░ ██░     ██░ ██░       ██░
+██████████░ ██░           ███░ ██░██░ ██░     ██░   ██░      ██░ ████████░   ██░       ██░
+██░     ██░ ███░          ██░  █████░ ███░    ██░   ██░      ██░ ██░     ██░ ██░       ██░
+██░     ██░  ███░    ██░ ███░   ███░   ██░    ██░   ██░     ██░  ██░     ██░ ███░     ███░
+██░     ██░    ███████░  ██░           ███░ ██████░ ████████░    ████████░     ████████░
+
+*/
