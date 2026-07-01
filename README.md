@@ -1,4 +1,4 @@
-# cpp_DecodingSecretMessage
+# DecodingSecretMessage
 
 Challenge from this link:
 
